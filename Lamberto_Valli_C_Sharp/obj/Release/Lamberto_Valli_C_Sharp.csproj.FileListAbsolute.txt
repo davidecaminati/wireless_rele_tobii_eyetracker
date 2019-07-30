@@ -1,0 +1,24 @@
+C:\Users\biagi\Documents\Visual Studio 2017\Projects\Lamberto_Valli_C_Sharp\Lamberto_Valli_C_Sharp\bin\Release\Lamberto_Valli_C_Sharp.exe.config
+C:\Users\biagi\Documents\Visual Studio 2017\Projects\Lamberto_Valli_C_Sharp\Lamberto_Valli_C_Sharp\bin\Release\Lamberto_Valli_C_Sharp.exe
+C:\Users\biagi\Documents\Visual Studio 2017\Projects\Lamberto_Valli_C_Sharp\Lamberto_Valli_C_Sharp\bin\Release\Lamberto_Valli_C_Sharp.pdb
+C:\Users\biagi\Documents\Visual Studio 2017\Projects\Lamberto_Valli_C_Sharp\Lamberto_Valli_C_Sharp\obj\Release\Lamberto_Valli_C_Sharp.csprojAssemblyReference.cache
+C:\Users\biagi\Documents\Visual Studio 2017\Projects\Lamberto_Valli_C_Sharp\Lamberto_Valli_C_Sharp\obj\Release\Lamberto_Valli_C_Sharp.Form1.resources
+C:\Users\biagi\Documents\Visual Studio 2017\Projects\Lamberto_Valli_C_Sharp\Lamberto_Valli_C_Sharp\obj\Release\Lamberto_Valli_C_Sharp.Properties.Resources.resources
+C:\Users\biagi\Documents\Visual Studio 2017\Projects\Lamberto_Valli_C_Sharp\Lamberto_Valli_C_Sharp\obj\Release\Lamberto_Valli_C_Sharp.csproj.GenerateResource.cache
+C:\Users\biagi\Documents\Visual Studio 2017\Projects\Lamberto_Valli_C_Sharp\Lamberto_Valli_C_Sharp\obj\Release\Lamberto_Valli_C_Sharp.csproj.CoreCompileInputs.cache
+C:\Users\biagi\Documents\Visual Studio 2017\Projects\Lamberto_Valli_C_Sharp\Lamberto_Valli_C_Sharp\obj\Release\Lamberto_Valli_C_Sharp.exe
+C:\Users\biagi\Documents\Visual Studio 2017\Projects\Lamberto_Valli_C_Sharp\Lamberto_Valli_C_Sharp\obj\Release\Lamberto_Valli_C_Sharp.pdb
+C:\Users\biagi\Desktop\Lamberto_valli\Lamberto_Valli_C_Sharp\bin\Release\Lamberto_Valli_C_Sharp.exe.config
+C:\Users\biagi\Desktop\Lamberto_valli\Lamberto_Valli_C_Sharp\bin\Release\Lamberto_Valli_C_Sharp.exe
+C:\Users\biagi\Desktop\Lamberto_valli\Lamberto_Valli_C_Sharp\bin\Release\Lamberto_Valli_C_Sharp.pdb
+C:\Users\biagi\Desktop\Lamberto_valli\Lamberto_Valli_C_Sharp\obj\Release\Lamberto_Valli_C_Sharp.csprojAssemblyReference.cache
+C:\Users\biagi\Desktop\Lamberto_valli\Lamberto_Valli_C_Sharp\obj\Release\Lamberto_Valli_C_Sharp.Form1.resources
+C:\Users\biagi\Desktop\Lamberto_valli\Lamberto_Valli_C_Sharp\obj\Release\Lamberto_Valli_C_Sharp.Properties.Resources.resources
+C:\Users\biagi\Desktop\Lamberto_valli\Lamberto_Valli_C_Sharp\obj\Release\Lamberto_Valli_C_Sharp.csproj.GenerateResource.cache
+C:\Users\biagi\Desktop\Lamberto_valli\Lamberto_Valli_C_Sharp\obj\Release\Lamberto_Valli_C_Sharp.csproj.CoreCompileInputs.cache
+C:\Users\biagi\Desktop\Lamberto_valli\Lamberto_Valli_C_Sharp\obj\Release\Lamberto_Valli_C_Sharp.exe
+C:\Users\biagi\Desktop\Lamberto_valli\Lamberto_Valli_C_Sharp\obj\Release\Lamberto_Valli_C_Sharp.pdb
+C:\Users\biagi\Desktop\Lamberto_valli\Lamberto_Valli_C_Sharp\bin\Release\EyeXFramework.dll
+C:\Users\biagi\Desktop\Lamberto_valli\Lamberto_Valli_C_Sharp\obj\Release\Lamberto_Valli_C_Sharp.UserControl1.resources
+C:\Users\biagi\Desktop\Lamberto_valli\Lamberto_Valli_C_Sharp\obj\Release\Lamberto_Valli_C_Sharp.csproj.CopyComplete
+C:\Users\biagi\Desktop\Lamberto_valli\Lamberto_Valli_C_Sharp\bin\Release\Tobii.EyeX.Client.Net20.dll
