@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.foldersList = new System.Windows.Forms.ListBox();
             this.pictureBoxSX = new System.Windows.Forms.PictureBox();
             this.pictureBoxDX = new System.Windows.Forms.PictureBox();
             this.progressBarSX = new System.Windows.Forms.ProgressBar();
@@ -46,16 +46,16 @@
             this.panelDX.SuspendLayout();
             this.SuspendLayout();
             // 
-            // listBox1
+            // foldersList
             // 
-            this.listBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 20;
-            this.listBox1.Location = new System.Drawing.Point(12, 12);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(276, 444);
-            this.listBox1.TabIndex = 2;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            this.foldersList.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.foldersList.FormattingEnabled = true;
+            this.foldersList.ItemHeight = 20;
+            this.foldersList.Location = new System.Drawing.Point(12, 12);
+            this.foldersList.Name = "foldersList";
+            this.foldersList.Size = new System.Drawing.Size(276, 444);
+            this.foldersList.TabIndex = 2;
+            this.foldersList.SelectedIndexChanged += new System.EventHandler(this.foldersList_SelectedIndexChanged);
             // 
             // pictureBoxSX
             // 
@@ -141,7 +141,7 @@
             this.ClientSize = new System.Drawing.Size(1099, 531);
             this.Controls.Add(this.panelDX);
             this.Controls.Add(this.panelSX);
-            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.foldersList);
             this.Name = "Form1";
             this.Text = "Lamberto Valli";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -155,7 +155,7 @@
 
         #endregion
         private System.IO.Ports.SerialPort serialPort1;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox foldersList;
         private System.Windows.Forms.PictureBox pictureBoxSX;
         private System.Windows.Forms.PictureBox pictureBoxDX;
         private System.Windows.Forms.ProgressBar progressBarSX;

@@ -17,32 +17,30 @@ namespace Lamberto_Valli_C_Sharp
     {
         private int BaudRate = 9600;
         private string PortName = "";
-        private string ActualSelected = "";
-
+        private string Selected = "";
         private String folderPath = Application.StartupPath + "/immagini";
-
-
+        
         public Form1()
         {
             InitializeComponent();
 
-            // Add eye-gaze interaction behaviors to the panels on the form.
-            // The panels should display a border when the user's gaze are on them.
-            // Note that panel4 is nested inside panel2. This means that any time 
-            // panel2 has the user's gaze, panel4 will too.
+            // Add eye-gaze interaction behaviors to the panels on the form
             Program.EyeXHost.Connect(behaviorMap1);
             behaviorMap1.Add(panelSX, new GazeAwareBehavior(OnGaze));
             behaviorMap1.Add(panelDX, new GazeAwareBehavior(OnGaze));
             //behaviorMap1.Add(panel3, new GazeAwareBehavior(OnGaze) { DelayMilliseconds = 500 });
-            //behaviorMap1.Add(panel4, new GazeAwareBehavior(OnGaze));
         }
-
-
-
-
+        
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            PopulateFoldersList();
+            ScanComPort();
+        }
+        
+        // Arduino "usual" use the port with highest index
+        // TODO: recognize Arduino COM port
         private void ScanComPort()
         {
-            // Arduino "usual" use the port with highest index
             foreach (string item in System.IO.Ports.SerialPort.GetPortNames())
             {
                 PortName = item;
@@ -57,15 +55,16 @@ namespace Lamberto_Valli_C_Sharp
                 MessageBox.Show("La scatola di controllo non è stata collegata");
             }
         }
-
-        void SendCommands(String comando)
+        
+        // Write "as is" to the COM port
+        void SendCommands(String commands)
         {
             if (!serialPort1.IsOpen)
             {
                 try
                 {
                     serialPort1.Open();
-                    serialPort1.Write(comando);
+                    serialPort1.Write(commands);
                     serialPort1.Close();
                 }
                 catch
@@ -74,14 +73,8 @@ namespace Lamberto_Valli_C_Sharp
                 }
             }
         }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            PopolateListBox();
-            ScanComPort();
-        }
-
-        private void PopolateListBox()
+        
+        private void PopulateFoldersList()
         {
             // check if folder exists, otherwise create it
             if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
@@ -89,13 +82,13 @@ namespace Lamberto_Valli_C_Sharp
             DirectoryInfo dinfo = new DirectoryInfo(folderPath);
             foreach (DirectoryInfo dir in dinfo.GetDirectories())
             {
-                listBox1.Items.Add(dir.Name);
+                foldersList.Items.Add(dir.Name);
             }
 
             // if listbox not empty, select first item
-            if (listBox1.Items.Count > 0)
+            if (foldersList.Items.Count > 0)
             {
-                listBox1.SelectedIndex = 0;
+                foldersList.SelectedIndex = 0;
             }
             else
             {
@@ -103,14 +96,16 @@ namespace Lamberto_Valli_C_Sharp
             }
         }
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+
+        private void foldersList_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateImages();
         }
 
+        // TODO: improve robustness, manage missed pictures and so on
         private void UpdateImages()
         {
-            string folderSelected = folderPath + "\\" + listBox1.SelectedItem.ToString();
+            string folderSelected = folderPath + "\\" + foldersList.SelectedItem.ToString();
             DirectoryInfo dinfo = new DirectoryInfo(folderSelected);
             FileInfo[] Files = dinfo.GetFiles("*.*");
             pictureBoxSX.Tag = "";
@@ -129,6 +124,7 @@ namespace Lamberto_Valli_C_Sharp
            
         }
 
+        // Usefull for test purpose
         private void pictureBoxSX_Click(object sender, EventArgs e)
         {
             selected_SX();
@@ -136,10 +132,7 @@ namespace Lamberto_Valli_C_Sharp
 
         private void selected_SX()
         {
-            string imageName = pictureBoxSX.Tag.ToString();
-            if (imageName.StartsWith("+")) SendCommands("on\r");
-            if (imageName.StartsWith("-")) SendCommands("off\r");
-            //MessageBox.Show(pictureBoxSX.Tag.ToString());
+            checkForCommand(pictureBoxSX.Tag.ToString());
         }
 
         private void pictureBoxDX_Click(object sender, EventArgs e)
@@ -149,10 +142,14 @@ namespace Lamberto_Valli_C_Sharp
 
         private void selected_DX()
         {
-            string imageName = pictureBoxDX.Tag.ToString();
+            checkForCommand(pictureBoxDX.Tag.ToString());
+            
+        }
+
+        private void checkForCommand(string imageName)
+        {
             if (imageName.StartsWith("+")) SendCommands("on\r");
             if (imageName.StartsWith("-")) SendCommands("off\r");
-            //MessageBox.Show(pictureBoxDX.Tag.ToString());
         }
 
         private void pictureBoxSX_MouseEnter(object sender, EventArgs e)
@@ -162,16 +159,11 @@ namespace Lamberto_Valli_C_Sharp
 
         private void aim(string actualSelected, ProgressBar pb, BackgroundWorker bgw)
         {
-            ActualSelected = actualSelected;
+            Selected = actualSelected;
             pb.Maximum = 100;
             pb.Step = 1;
             pb.Value = 0;
-            if (!bgw.IsBusy)
-            {
-
-                bgw.RunWorkerAsync();
-            }
-           
+            if (!bgw.IsBusy) bgw.RunWorkerAsync();   
         }
 
         private void pictureBoxSX_MouseLeave(object sender, EventArgs e)
@@ -181,7 +173,7 @@ namespace Lamberto_Valli_C_Sharp
 
         private void leave(BackgroundWorker bgw,ProgressBar pb)
         {
-            ActualSelected = "";
+            Selected = "";
             //Check if background worker is doing anything and send a cancellation if it is
             if (bgw.IsBusy)
             {
@@ -198,7 +190,6 @@ namespace Lamberto_Valli_C_Sharp
         private void pictureBoxDX_MouseLeave(object sender, EventArgs e)
         {
             leave(backgroundWorkerDX, progressBarDX);
-
         }
         
         private void backgroundWorkerSX_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
@@ -220,14 +211,12 @@ namespace Lamberto_Valli_C_Sharp
             //Remember in the loop we set i < 100 so in theory the process will complete at 99%
             backgroundWorkerSX.ReportProgress(100);
         }
-
-
+        
         private void backgroundWorkerSX_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
             progressBarSX.Value = e.ProgressPercentage;
         }
-
-
+        
         private void backgroundWorkerSX_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled)
@@ -244,8 +233,7 @@ namespace Lamberto_Valli_C_Sharp
                 selected_SX();
             }
         }
-
-
+        
         private void backgroundWorkerDX_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled)
@@ -293,7 +281,7 @@ namespace Lamberto_Valli_C_Sharp
             var panel = sender as Panel;
             if (panel != null)
             {
-                if ( e.HasGaze)
+                if (e.HasGaze)
                 {
                     //aim
                      panel.BorderStyle = BorderStyle.FixedSingle;
