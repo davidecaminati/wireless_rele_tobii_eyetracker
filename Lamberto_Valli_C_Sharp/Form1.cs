@@ -92,7 +92,7 @@ namespace Lamberto_Valli_C_Sharp
             }
             else
             {
-                MessageBox.Show("Mancano le cartelle delle immagini");
+                MessageBox.Show("Mancano le cartelle delle immagini in " + folderPath);
             }
         }
         
@@ -121,7 +121,8 @@ namespace Lamberto_Valli_C_Sharp
             }
             catch
             {
-                MessageBox.Show("La cartella " + folderName + " non contiene 2 immagini","Attenzione",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show("La cartella " + folderName + " non contiene 2 immagini in \n" + folderSelected,
+                    "Attenzione",MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
         }
 
