@@ -16,10 +16,13 @@ namespace Lamberto_Valli_C_Sharp
     public partial class Form1 : Form
     {
         private int BaudRate = 9600;
+        private int delayTime = 40;
         private string PortName = "";
         private string Selected = "";
+        // TODO chenge folder name "/immagini" to avoid misunderstand with system folder 
         private String folderPath = Application.StartupPath + "/immagini";
         
+        # region Initialization
         public Form1()
         {
             InitializeComponent();
@@ -30,13 +33,13 @@ namespace Lamberto_Valli_C_Sharp
             behaviorMap1.Add(panelDX, new GazeAwareBehavior(OnGaze));
             //behaviorMap1.Add(panel3, new GazeAwareBehavior(OnGaze) { DelayMilliseconds = 500 });
         }
-        
+
         private void Form1_Load(object sender, EventArgs e)
         {
             PopulateFoldersList();
             ScanComPort();
         }
-        
+
         // Arduino "usual" use the port with highest index
         // TODO: recognize Arduino COM port
         private void ScanComPort()
@@ -55,25 +58,7 @@ namespace Lamberto_Valli_C_Sharp
                 MessageBox.Show("La scatola di controllo non è stata collegata");
             }
         }
-        
-        // Write "as is" to the COM port
-        void SendCommands(String commands)
-        {
-            if (!serialPort1.IsOpen)
-            {
-                try
-                {
-                    serialPort1.Open();
-                    serialPort1.Write(commands);
-                    serialPort1.Close();
-                }
-                catch
-                {
-                    MessageBox.Show("La scatola di controllo non è stata collegata");
-                }
-            }
-        }
-        
+                
         private void PopulateFoldersList()
         {
             // check if folder exists, otherwise create it
@@ -95,7 +80,73 @@ namespace Lamberto_Valli_C_Sharp
                 MessageBox.Show("Mancano le cartelle delle immagini in " + folderPath);
             }
         }
+        #endregion
+
+
+        # region Arduino and comunication
+
+        // Write "as is" to the COM port
+        void SendCommands(String commands)
+        {
+            if (!serialPort1.IsOpen)
+            {
+                try
+                {
+                    serialPort1.Open();
+                    serialPort1.Write(commands);
+                    serialPort1.Close();
+                }
+                catch
+                {
+                    MessageBox.Show("La scatola di controllo non è stata collegata");
+                }
+            }
+        }
         
+        private void checkForCommand(string imageName)
+        {
+            if (imageName.StartsWith("+")) SendCommands("on\r");
+            if (imageName.StartsWith("-")) SendCommands("off\r");
+        }
+        #endregion
+
+
+        # region Test purpose
+        // Usefull for test purpose
+        private void pictureBoxSX_Click(object sender, EventArgs e)
+        {
+            selected_SX();
+        }
+                
+        private void pictureBoxDX_Click(object sender, EventArgs e)
+        {
+            selected_DX();
+        }
+
+        private void pictureBoxSX_MouseEnter(object sender, EventArgs e)
+        {
+            aim(pictureBoxSX.Tag.ToString(), progressBarSX, backgroundWorkerSX);
+        }
+
+        private void pictureBoxSX_MouseLeave(object sender, EventArgs e)
+        {
+            leave(backgroundWorkerSX,progressBarSX);
+        }
+
+        private void pictureBoxDX_MouseEnter(object sender, EventArgs e)
+        {
+            aim(pictureBoxDX.Tag.ToString(), progressBarDX, backgroundWorkerDX);
+        }
+        
+        private void pictureBoxDX_MouseLeave(object sender, EventArgs e)
+        {
+            leave(backgroundWorkerDX, progressBarDX);
+        }
+        # endregion
+
+
+        # region Business logic
+
         private void foldersList_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateImages();
@@ -126,39 +177,17 @@ namespace Lamberto_Valli_C_Sharp
             }
         }
 
-        // Usefull for test purpose
-        private void pictureBoxSX_Click(object sender, EventArgs e)
-        {
-            selected_SX();
-        }
-
         private void selected_SX()
         {
             checkForCommand(pictureBoxSX.Tag.ToString());
         }
-
-        private void pictureBoxDX_Click(object sender, EventArgs e)
-        {
-            selected_DX();
-        }
-
+        
         private void selected_DX()
         {
             checkForCommand(pictureBoxDX.Tag.ToString());
             
         }
-
-        private void checkForCommand(string imageName)
-        {
-            if (imageName.StartsWith("+")) SendCommands("on\r");
-            if (imageName.StartsWith("-")) SendCommands("off\r");
-        }
-
-        private void pictureBoxSX_MouseEnter(object sender, EventArgs e)
-        {
-            aim(pictureBoxSX.Tag.ToString(), progressBarSX, backgroundWorkerSX);
-        }
-
+        
         private void aim(string actualSelected, ProgressBar pb, BackgroundWorker bgw)
         {
             Selected = actualSelected;
@@ -167,12 +196,7 @@ namespace Lamberto_Valli_C_Sharp
             pb.Value = 0;
             if (!bgw.IsBusy) bgw.RunWorkerAsync();   
         }
-
-        private void pictureBoxSX_MouseLeave(object sender, EventArgs e)
-        {
-            leave(backgroundWorkerSX,progressBarSX);
-        }
-
+        
         private void leave(BackgroundWorker bgw,ProgressBar pb)
         {
             Selected = "";
@@ -184,36 +208,47 @@ namespace Lamberto_Valli_C_Sharp
             pb.Value = 0;
         }
         
-        private void pictureBoxDX_MouseEnter(object sender, EventArgs e)
-        {
-            aim(pictureBoxDX.Tag.ToString(), progressBarDX, backgroundWorkerDX);
-        }
-        
-        private void pictureBoxDX_MouseLeave(object sender, EventArgs e)
-        {
-            leave(backgroundWorkerDX, progressBarDX);
-        }
-        
-        private void backgroundWorkerSX_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            for (int i = 0; i < 100; i++)
-            {
-                Thread.Sleep(40);
-                backgroundWorkerSX.ReportProgress(i);
 
-                //Check if there is a request to cancel the process
-                if (backgroundWorkerSX.CancellationPending)
+        private void OnGaze(object sender, GazeAwareEventArgs e)
+        {
+            var panel = sender as Panel;
+            if (panel != null)
+            {
+                if (e.HasGaze)
                 {
-                    e.Cancel = true;
-                    backgroundWorkerSX.ReportProgress(0);
-                    return;
+                    //aim
+                     panel.BorderStyle = BorderStyle.FixedSingle;
+                    if (panel.Name == "panelSX")
+                    {
+                        aim(pictureBoxSX.Tag.ToString(), progressBarSX, backgroundWorkerSX);
+                        leave(backgroundWorkerDX, progressBarDX);
+                    }
+                    if (panel.Name == "panelDX")
+                    {
+                        aim(pictureBoxDX.Tag.ToString(), progressBarDX, backgroundWorkerDX);
+                        leave(backgroundWorkerSX, progressBarSX);
+                    }
+                }
+                else
+                {
+                    //leaved
+                    panel.BorderStyle = BorderStyle.None;
+                    if (panel.Name == "panelSX")
+                    {
+                        leave(backgroundWorkerSX, progressBarSX);
+                    }
+                    if (panel.Name == "panelDX")
+                    {
+                        leave(backgroundWorkerDX, progressBarDX);
+                    }
                 }
             }
-            //If the process exits the loop, ensure that progress is set to 100%
-            //Remember in the loop we set i < 100 so in theory the process will complete at 99%
-            backgroundWorkerSX.ReportProgress(100);
         }
-        
+        # endregion
+
+
+        # region Progressbar
+
         private void backgroundWorkerSX_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
             progressBarSX.Value = e.ProgressPercentage;
@@ -262,9 +297,8 @@ namespace Lamberto_Valli_C_Sharp
         {
             for (int i = 0; i < 100; i++)
             {
-                Thread.Sleep(20);
+                Thread.Sleep(delayTime);
                 backgroundWorkerDX.ReportProgress(i);
-
                 //Check if there is a request to cancel the process
                 if (backgroundWorkerDX.CancellationPending)
                 {
@@ -277,41 +311,25 @@ namespace Lamberto_Valli_C_Sharp
             //Remember in the loop we set i < 100 so in theory the process will complete at 99%
             backgroundWorkerDX.ReportProgress(100);
         }
-
-        private void OnGaze(object sender, GazeAwareEventArgs e)
+        
+        private void backgroundWorkerSX_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            var panel = sender as Panel;
-            if (panel != null)
+            for (int i = 0; i < 100; i++)
             {
-                if (e.HasGaze)
+                Thread.Sleep(delayTime);
+                backgroundWorkerSX.ReportProgress(i);
+                //Check if there is a request to cancel the process
+                if (backgroundWorkerSX.CancellationPending)
                 {
-                    //aim
-                     panel.BorderStyle = BorderStyle.FixedSingle;
-                    if (panel.Name == "panelSX")
-                    {
-                        aim(pictureBoxSX.Tag.ToString(), progressBarSX, backgroundWorkerSX);
-                        leave(backgroundWorkerDX, progressBarDX);
-                    }
-                    if (panel.Name == "panelDX")
-                    {
-                        aim(pictureBoxDX.Tag.ToString(), progressBarDX, backgroundWorkerDX);
-                        leave(backgroundWorkerSX, progressBarSX);
-                    }
-                }
-                else
-                {
-                    //leaved
-                    panel.BorderStyle = BorderStyle.None;
-                    if (panel.Name == "panelSX")
-                    {
-                        leave(backgroundWorkerSX, progressBarSX);
-                    }
-                    if (panel.Name == "panelDX")
-                    {
-                        leave(backgroundWorkerDX, progressBarDX);
-                    }
+                    e.Cancel = true;
+                    backgroundWorkerSX.ReportProgress(0);
+                    return;
                 }
             }
+            //If the process exits the loop, ensure that progress is set to 100%
+            //Remember in the loop we set i < 100 so in theory the process will complete at 99%
+            backgroundWorkerSX.ReportProgress(100);
         }
+        # endregion
     }
 }
