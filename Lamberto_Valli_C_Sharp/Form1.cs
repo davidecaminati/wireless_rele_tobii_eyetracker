@@ -95,8 +95,7 @@ namespace Lamberto_Valli_C_Sharp
                 MessageBox.Show("Mancano le cartelle delle immagini");
             }
         }
-
-
+        
         private void foldersList_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateImages();
@@ -105,11 +104,14 @@ namespace Lamberto_Valli_C_Sharp
         // TODO: improve robustness, manage missed pictures and so on
         private void UpdateImages()
         {
-            string folderSelected = folderPath + "\\" + foldersList.SelectedItem.ToString();
+            string folderName = foldersList.SelectedItem.ToString();
+            string folderSelected = folderPath + "\\" + folderName;
             DirectoryInfo dinfo = new DirectoryInfo(folderSelected);
             FileInfo[] Files = dinfo.GetFiles("*.*");
             pictureBoxSX.Tag = "";
             pictureBoxDX.Tag = "";
+            pictureBoxSX.Image = null;
+            pictureBoxDX.Image = null;
             try
             {
                 pictureBoxSX.Image = Image.FromFile(Files[0].FullName);
@@ -119,9 +121,8 @@ namespace Lamberto_Valli_C_Sharp
             }
             catch
             {
-                MessageBox.Show("manca una immagine");
+                MessageBox.Show("La cartella " + folderName + " non contiene 2 immagini","Attenzione",MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
-           
         }
 
         // Usefull for test purpose
