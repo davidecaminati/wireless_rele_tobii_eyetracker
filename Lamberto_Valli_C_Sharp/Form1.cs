@@ -37,8 +37,17 @@ namespace Lamberto_Valli_C_Sharp
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            CreateFoldersBasicStructure();
+
             PopulateFoldersList();
             ScanComPort();
+        }
+
+        private void CreateFoldersBasicStructure()
+        {
+            // check if folder exists, otherwise create it
+            if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
+
         }
 
         // Arduino "usual" use the port with highest index
@@ -78,7 +87,7 @@ namespace Lamberto_Valli_C_Sharp
             }
             else
             {
-                MessageBox.Show("Mancano le cartelle delle immagini in " + folderPath);
+                MessageBox.Show("Mancano le cartelle delle simboli in " + folderPath);
             }
         }
         #endregion
@@ -173,7 +182,7 @@ namespace Lamberto_Valli_C_Sharp
             }
             catch
             {
-                MessageBox.Show("La cartella " + folderName + " non contiene 2 immagini in \n" + folderSelected,
+                MessageBox.Show("La cartella " + folderName + " non contiene 2 simboli in \n" + folderSelected,
                     "Attenzione",MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
         }
