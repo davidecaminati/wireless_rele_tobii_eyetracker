@@ -15,12 +15,13 @@ namespace Lamberto_Valli_C_Sharp
 {
     public partial class Form1 : Form
     {
-        private int BaudRate = 9600;
+        private int baudRate = 9600;
         private int delayTime = 40;
-        private string PortName = "";
-        private string Selected = "";
+        private string portName = "";
+        private string selected = "";
+        private const string simolsFolderName = "simboli";
         // TODO chenge folder name "/immagini" to avoid misunderstand with system folder 
-        private String folderPath = Application.StartupPath + "/immagini";
+        private String folderPath = Application.StartupPath + "/" + simolsFolderName;
         
         # region Initialization
         public Form1()
@@ -46,12 +47,12 @@ namespace Lamberto_Valli_C_Sharp
         {
             foreach (string item in System.IO.Ports.SerialPort.GetPortNames())
             {
-                PortName = item;
+                portName = item;
             }
-            if  (PortName != "")
+            if  (portName != "")
             {
-                serialPort1.PortName = PortName;
-                serialPort1.BaudRate = BaudRate;
+                serialPort1.PortName = portName;
+                serialPort1.BaudRate = baudRate;
             }
             else
             {
@@ -190,7 +191,7 @@ namespace Lamberto_Valli_C_Sharp
         
         private void aim(string actualSelected, ProgressBar pb, BackgroundWorker bgw)
         {
-            Selected = actualSelected;
+            selected = actualSelected;
             pb.Maximum = 100;
             pb.Step = 1;
             pb.Value = 0;
@@ -199,7 +200,7 @@ namespace Lamberto_Valli_C_Sharp
         
         private void leave(BackgroundWorker bgw,ProgressBar pb)
         {
-            Selected = "";
+            selected = "";
             //Check if background worker is doing anything and send a cancellation if it is
             if (bgw.IsBusy)
             {
