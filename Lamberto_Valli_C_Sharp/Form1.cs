@@ -11,6 +11,10 @@ using System.IO;
 using System.Threading;
 using EyeXFramework;
 
+
+// TODO play sound at loading complete
+// TODO blink at loading complete
+
 namespace Lamberto_Valli_C_Sharp
 {
     public partial class Form1 : Form
@@ -38,9 +42,15 @@ namespace Lamberto_Valli_C_Sharp
         private void Form1_Load(object sender, EventArgs e)
         {
             CreateFoldersBasicStructure();
-
+            InitializePicturebox();
             PopulateFoldersList();
             ScanComPort();
+        }
+
+        private void InitializePicturebox()
+        {
+            pictureBoxSX.Tag = "";
+            pictureBoxDX.Tag = "";
         }
 
         private void CreateFoldersBasicStructure()
@@ -135,7 +145,8 @@ namespace Lamberto_Valli_C_Sharp
 
         private void pictureBoxSX_MouseEnter(object sender, EventArgs e)
         {
-            aim(pictureBoxSX.Tag.ToString(), progressBarSX, backgroundWorkerSX);
+
+                aim(pictureBoxSX.Tag.ToString(), progressBarSX, backgroundWorkerSX);
         }
 
         private void pictureBoxSX_MouseLeave(object sender, EventArgs e)
@@ -145,7 +156,7 @@ namespace Lamberto_Valli_C_Sharp
 
         private void pictureBoxDX_MouseEnter(object sender, EventArgs e)
         {
-            aim(pictureBoxDX.Tag.ToString(), progressBarDX, backgroundWorkerDX);
+                aim(pictureBoxDX.Tag.ToString(), progressBarDX, backgroundWorkerDX); 
         }
         
         private void pictureBoxDX_MouseLeave(object sender, EventArgs e)
@@ -189,22 +200,24 @@ namespace Lamberto_Valli_C_Sharp
 
         private void selected_SX()
         {
-            checkForCommand(pictureBoxSX.Tag.ToString());
+             checkForCommand(pictureBoxSX.Tag.ToString());
         }
         
         private void selected_DX()
         {
             checkForCommand(pictureBoxDX.Tag.ToString());
-            
         }
         
         private void aim(string actualSelected, ProgressBar pb, BackgroundWorker bgw)
         {
-            selected = actualSelected;
-            pb.Maximum = 100;
-            pb.Step = 1;
-            pb.Value = 0;
-            if (!bgw.IsBusy) bgw.RunWorkerAsync();   
+            if (actualSelected != "")
+            {
+                selected = actualSelected;
+                pb.Maximum = 100;
+                pb.Step = 1;
+                pb.Value = 0;
+                if (!bgw.IsBusy) bgw.RunWorkerAsync();
+            }
         }
         
         private void leave(BackgroundWorker bgw,ProgressBar pb)
@@ -228,12 +241,12 @@ namespace Lamberto_Valli_C_Sharp
                 {
                     //aim
                      panel.BorderStyle = BorderStyle.FixedSingle;
-                    if (panel.Name == "panelSX")
+                    if (panel.Name == "panelSX" && pictureBoxSX.Image  != null)
                     {
                         aim(pictureBoxSX.Tag.ToString(), progressBarSX, backgroundWorkerSX);
                         leave(backgroundWorkerDX, progressBarDX);
                     }
-                    if (panel.Name == "panelDX")
+                    if (panel.Name == "panelDX" && pictureBoxDX.Image != null)
                     {
                         aim(pictureBoxDX.Tag.ToString(), progressBarDX, backgroundWorkerDX);
                         leave(backgroundWorkerSX, progressBarSX);
